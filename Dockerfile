@@ -25,6 +25,7 @@ WORKDIR /app
 
 # Copy Dependencies
 COPY poetry.lock pyproject.toml ./
+# COPY * ./
 
 RUN /bin/bash -c 'source $POETRY_VENV/bin/activate && \
     poetry install --no-root'

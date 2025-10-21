@@ -87,7 +87,7 @@ services:
       dockerfile: Dockerfile
       target: runtime
     ports:
-      - 15555:5555
+      - 8888:8888
     volumes:
       - ./:/app/FN-Basic-Services
     restart: unless-stopped
@@ -104,7 +104,7 @@ services:
       dockerfile: Dockerfile
       target: test
     ports:
-      - 15556:5555
+      - 8889:8889
     volumes:
       - ./:/app/FN-Basic-Services
     # restart: unless-stopped
