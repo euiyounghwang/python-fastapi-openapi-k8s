@@ -41,7 +41,7 @@ COPY . FN-Basic-Services
 # The reason might be that you saved the file on Windows, with CR LF as the line ending (\r\n).
 # https://stackoverflow.com/questions/14219092/bash-script-bin-bashm-bad-interpreter-no-such-file-or-directory
 RUN sed -i -e 's/\r$//' /app/FN-Basic-Services/*.sh
-
+RUN chmod 755 /app/FN-Basic-Services/*.sh
 
 ENTRYPOINT ["/app/FN-Basic-Services/docker-run-tests.sh"]
 
@@ -68,6 +68,7 @@ ENV PYTHONUNBUFFERED=1
 # The reason might be that you saved the file on Windows, with CR LF as the line ending (\r\n).
 # https://stackoverflow.com/questions/14219092/bash-script-bin-bashm-bad-interpreter-no-such-file-or-directory
 RUN sed -i -e 's/\r$//' /app/FN-Basic-Services/*.sh
+RUN chmod 755 /app/FN-Basic-Services/*.sh
 
 ENTRYPOINT ["/app/FN-Basic-Services/docker-run-entrypoints.sh"]
 
