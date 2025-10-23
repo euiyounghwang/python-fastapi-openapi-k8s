@@ -51,6 +51,10 @@ WORKDIR /app
 COPY --from=environment /app .
 COPY . FN-Basic-Services
 
+# Set env variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
 # Enable venv
 ENV PATH="/app/poetry-venv/bin:$PATH"
 

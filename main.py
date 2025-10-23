@@ -2,11 +2,13 @@ from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 from starlette.middleware.cors import CORSMiddleware
 # from controller import db_controller
-from config.log_config import create_log
+# from config.log_config import create_log
 import yaml
+from injector import logger
 
 
-logger = create_log()
+# logger = create_log()
+
 app = FastAPI(
     title="FastAPI Basic Docker with k8s Service",
     description="FastAPI Basic Docker with k8s Service",
