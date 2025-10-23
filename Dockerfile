@@ -1,13 +1,13 @@
 
 
-FROM --platform=linux/amd64 python:3.9-slim-buster as environment
+FROM --platform=linux/amd64 python:3.9-slim-buster AS environment
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Configure Poetry
 ENV POETRY_VERSION=1.3.2
 ENV POETRY_HOME=/app/poetry
 ENV POETRY_VENV=/app/poetry-venv
-ENV PATH="/app/poetry-venv/bin:$PATH"
+ENV PATH="$POETRY_VENV/bin:$PATH"
 ENV POETRY_CACHE_DIR=/app/.cache
 
 # Install poetry separated from system interpreter
@@ -19,8 +19,8 @@ RUN python3 -m venv $POETRY_VENV \
 ENV PATH="${PATH}:${POETRY_VENV}/bin"
 
 # Set env variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
@@ -31,7 +31,7 @@ RUN /bin/bash -c 'source $POETRY_VENV/bin/activate && \
     poetry install --no-root'
 
 
-FROM --platform=linux/amd64 python:3.9-slim-buster as test
+FROM --platform=linux/amd64 python:3.9-slim-buster AS test
 
 WORKDIR /app
 #COPY --from=indexing_environment $POETRY_VENV $POETRY_VENV
@@ -43,7 +43,7 @@ COPY . FN-Basic-Services
 ENTRYPOINT ["/app/FN-Basic-Services/docker-run-tests.sh"]
 
 
-FROM --platform=linux/amd64 python:3.9-slim-buster as runtime
+FROM --platform=linux/amd64 python:3.9-slim-buster AS runtime
 
 WORKDIR /app
 
@@ -52,11 +52,15 @@ COPY --from=environment /app .
 COPY . FN-Basic-Services
 
 # Set env variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Configure Poetry
+ENV POETRY_VENV=/app/poetry-venv
+ENV PATH="$POETRY_VENV/bin:$PATH"
 
 # Enable venv
-ENV PATH="/app/poetry-venv/bin:$PATH"
+ENV PATH="$POETRY_VENV/bin:$PATH"
 
 # ENTRYPOINT ["/app/FN-Basic-Services/docker-run-entrypoints.sh"]
 # CMD ["gunicorn", "--bind", "0.0.0.0:8888", "main:app"]

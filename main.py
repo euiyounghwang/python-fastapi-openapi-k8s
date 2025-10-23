@@ -62,7 +62,7 @@ app.openapi = custom_openapi
          summary="Return Json")
 async def root():
     logger.info("/hello")
-    return {"message": "Hello World from openapi.yml"}
+    return {"message": "python-fastapi-openapi.yml k8s"}
 
 '''
 @app.get("/test", tags=['API'],  
