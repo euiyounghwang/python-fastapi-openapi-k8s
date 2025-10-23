@@ -3,6 +3,8 @@ set -ex
 
 # sleep 60
 
+export PYTHONDONTWRITEBYTECODE=1
+
 echo "entrypoints.sh"
 
 # --

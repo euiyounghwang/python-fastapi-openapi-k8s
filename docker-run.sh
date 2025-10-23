@@ -2,6 +2,9 @@
 
 set -eu
 
+export PYTHONDONTWRITEBYTECODE=1
+
+
 SCRIPTDIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 # ~ V.7

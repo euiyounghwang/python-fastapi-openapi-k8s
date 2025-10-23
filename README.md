@@ -96,5 +96,34 @@ sudo service k8s_es_api status/stop/start
 - Service : http://localhost:8888/docs
 
 
+
+
+### Pytest
+- Go to virtual enviroment using `source .venv/bin/activate`
+- Run this command manually: `poetry run py.test -v --junitxml=test-reports/junit/pytest.xml --cov-report html --cov tests/` or `./pytest.sh`
+```bash
+$ ./pytest.sh
+tests\test_api.py::test_api [2025-10-23 15:26:04,750] [INFO] [main] [root] /hello
+[2025-10-23 15:26:04,759] [INFO] [_client] [_send_single_request] HTTP Request: GET http://testserver/ "HTTP/1.1 200 OK"
+PASSED
+
+============================================================= tests coverage ============================================================== 
+_____________________________________________ coverage: platform win32, python 3.11.7-final-0 _____________________________________________ 
+
+Name                   Stmts   Miss  Cover   Missing
+----------------------------------------------------
+config\log_config.py      32      1    97%   42
+injector.py                6      0   100%
+main.py                   13      0   100%
+tests\__init__.py          0      0   100%
+tests\conftest.py          8      0   100%
+tests\test_api.py          6      0   100%
+----------------------------------------------------
+TOTAL                     65      1    98%
+============================================================ 1 passed in 0.23s ============================================================ 
+(.venv) 
+```
+
+
 ### Kubernetes
 - Kubernetes is an open-source container orchestration system that automates the deployment, scaling, and management of containerized applications. It works by providing an API to manage clusters of virtual machines, scheduling containers, and automatically handling tasks like service discovery, load balancing, and self-healing to ensure applications remain available. 

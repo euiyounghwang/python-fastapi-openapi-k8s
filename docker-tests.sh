@@ -2,7 +2,7 @@
 
 set -eu
 
-SCRIPTDIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+export PYTHONDONTWRITEBYTECODE=1
 
 docker run --rm -it --platform linux/amd64 -it -d \
   --name ffn-basic-docker-api --publish 8889:8889 --expose 8889 \
