@@ -125,5 +125,56 @@ TOTAL                     65      1    98%
 ```
 
 
+
+### Docker build
+- Run the command using `./docker-compose.yml` or `./docker-build.sh` and `./docker-run.sh`
+```bash
+*  Executing task in folder python-fastapi-openapi-k8s: 'C:\Program Files\Docker\Docker\resources\bin\docker.EXE' compose -f 'docker-compose.yml' up -d --build 'fn-basic-docker-api' 'fn-basic-docker-api-test' 
+
+[+] Building 7.5s (19/19) FINISHED
+ => [internal] load local bake definitions                                                                                             0.0s
+ => => reading from stdin 925B                                                                                                         0.0s
+ => [fn-basic-docker-api-test internal] load build definition from Dockerfile                                                          0.0s
+ => => transferring dockerfile: 2.39kB                                                                                                 0.0s
+ => WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 3)                   0.0s 
+ => WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 34)                  0.0s 
+ => WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 49)                  0.0s 
+ => WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 3)                   0.0s 
+ => WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 34)                  0.0s 
+ => WARN: FromPlatformFlagConstDisallowed: FROM --platform flag should not use constant value "linux/amd64" (line 49)                  0.0s 
+ => [fn-basic-docker-api internal] load metadata for docker.io/library/python:3.9-slim-buster                                          0.7s 
+ => [fn-basic-docker-api internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 74B                                                                                                       0.0s 
+ => [fn-basic-docker-api-test environment 1/5] FROM docker.io/library/python:3.9-slim-buster@sha256:320a7a4250aba4249f458872adecf92ee  0.0s 
+ => [fn-basic-docker-api-test internal] load build context                                                                             0.7s 
+ => => transferring context: 226.34kB                                                                                                  0.7s 
+ => CACHED [fn-basic-docker-api-test runtime 2/5] WORKDIR /app                                                                         0.0s
+ => CACHED [fn-basic-docker-api-test environment 2/5] RUN python3 -m venv /app/poetry-venv  && /app/poetry-venv/bin/pip install -U pi  0.0s 
+ => CACHED [fn-basic-docker-api-test environment 3/5] WORKDIR /app                                                                     0.0s
+ => CACHED [fn-basic-docker-api-test environment 4/5] COPY poetry.lock pyproject.toml ./                                               0.0s 
+ => CACHED [fn-basic-docker-api-test environment 5/5] RUN /bin/bash -c 'source $POETRY_VENV/bin/activate &&     poetry install --no-r  0.0s 
+ => CACHED [fn-basic-docker-api-test runtime 3/5] COPY --from=environment /app .                                                       0.0s 
+ => [fn-basic-docker-api runtime 4/5] COPY . FN-Basic-Services                                                                         1.4s
+ => [fn-basic-docker-api-test test 5/5] RUN sed -i -e 's/\r$//' /app/FN-Basic-Services/*.sh                                            0.6s 
+ => [fn-basic-docker-api runtime 5/5] RUN sed -i -e 's/\r$//' /app/FN-Basic-Services/*.sh                                              0.7s 
+ => [fn-basic-docker-api-test] exporting to image                                                                                      1.0s 
+ => => exporting layers                                                                                                                1.0s 
+ => => writing image sha256:9efc497a918564a8c7d0de13bbd04f07e82df3e852a8ad87c6fdbf7fde2a5db5                                           0.0s 
+ => => naming to docker.io/library/ffn-basic-docker-api:test                                                                           0.0s 
+ => [fn-basic-docker-api] exporting to image                                                                                           1.0s 
+ => => exporting layers                                                                                                                1.0s 
+ => => writing image sha256:b4bfe71d730f3ace7f14eba1540487c482628029037648f59ffd31541df26df8                                           0.0s 
+ => => naming to docker.io/library/fn-basic-docker-api:es                                                                              0.0s 
+ => [fn-basic-docker-api] resolving provenance for metadata file                                                                       0.0s 
+ => [fn-basic-docker-api-test] resolving provenance for metadata file                                                                  0.0s 
+[+] Running 4/4
+ ✔ fn-basic-docker-api                 Built                                                                                           0.0s 
+ ✔ fn-basic-docker-api-test            Built                                                                                           0.0s 
+ ✔ Container fn-basic-docker-api       Started                                                                                        12.9s 
+ ✔ Container fn-basic-docker-api-test  Started                                                                                        12.9s 
+ *  Terminal will be reused by tasks, press any key to close it. 
+```
+
+
 ### Kubernetes
 - Kubernetes is an open-source container orchestration system that automates the deployment, scaling, and management of containerized applications. It works by providing an API to manage clusters of virtual machines, scheduling containers, and automatically handling tasks like service discovery, load balancing, and self-healing to ensure applications remain available. 
