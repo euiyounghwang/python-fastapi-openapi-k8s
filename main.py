@@ -59,6 +59,7 @@ app.openapi = custom_openapi
          description="Default GET API", 
          summary="Return Json")
 async def root():
+    logger.info("/hello")
     return {"message": "Hello World from openapi.yml"}
 
 '''

@@ -91,7 +91,8 @@ sudo service k8s_es_api status/stop/start
 
 
 ### Service
-- Run this command `./start-start.sh` or python -m uvicorn main:app --reload --host=0.0.0.0 --port=8888 --workers 4
+- Run this command `./start-start.sh` or `python -m uvicorn main:app --reload --host=0.0.0.0 --port=8888 --workers 4`
+- Run Dockerfile: `CMD ["gunicorn", "-w", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8888", "-t", "30", "--pythonpath", "/app/FN-Basic-Services", "main:app"]`
 - Service : http://localhost:8888/docs
 
 

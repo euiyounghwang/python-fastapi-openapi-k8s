@@ -3,6 +3,8 @@ set -ex
 
 # sleep 60
 
+echo "entrypoints.sh"
+
 # --
 # Poetry v.
 # --
