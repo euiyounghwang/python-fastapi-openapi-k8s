@@ -25,8 +25,7 @@ services:
       dockerfile: Dockerfile
       target: omni_es
     ports:
-      - 9200:9201
-      - 9203:9201
+      - 9200:9200
     # restart: unless-stopped
     environment:
       # v_7
@@ -61,7 +60,7 @@ services:
       - ./Docker/elasticsearch/backup:/usr/share/elasticsearch/backup
       - ./Docker/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     healthcheck:
-      test: ["CMD", "curl","-s" ,"-f", "http://localhost:9201/_cat/health"]
+      test: ["CMD", "curl","-s" ,"-f", "http://localhost:9200/_cat/health"]
     networks:
       - bridge
   
@@ -76,7 +75,7 @@ services:
     depends_on:
       - fn-cicd-basic-omni_es
     environment:
-      ELASTICSEARCH_HOSTS: http://fn-cicd-basic-omni_es:9201
+      ELASTICSEARCH_HOSTS: http://fn-cicd-basic-omni_es:9200
   
       
   fn-basic-docker-api:
