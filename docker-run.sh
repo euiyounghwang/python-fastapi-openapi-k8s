@@ -37,7 +37,12 @@ SCRIPTDIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 #   -v "$SCRIPTDIR:/FN-BEES-Services/" \
 #   fn-platform-basic-api:omni_es
   
-docker run --rm -it -d --publish 8888:8888 --expose 8888 \
+# docker run --rm -it -d --publish 8888:8888 --expose 8888 \
+#   --name fn-basic-docker-api \
+#   -v "$SCRIPTDIR:/FN-BEES-Services/" \
+#   fn-basic-docker-api:es
+
+docker run --publish 8888:8888 --expose 8888 \
   --name fn-basic-docker-api \
   -v "$SCRIPTDIR:/FN-BEES-Services/" \
   fn-basic-docker-api:es
