@@ -180,6 +180,7 @@ TOTAL                     65      1    98%
     - Master Nodes: This node hosts the driver program, which is responsible for coordinating and managing the execution of Spark applications. It tracks the status of worker nodes and allocates tasks to them.
     - Worker Nodes: These nodes, also known as data nodes, are responsible for storing data and executing the actual data processing tasks. They run Spark executor processes that perform computations on data partitions assigned by the master
 - Download : https://spark.apache.org/downloads.html
+- Spark Run Mode : Cluster, Client, Local Mode
 - SSH into Local VM_#1, #2
 ### Commands to create Spark Cluster
 - __Installation Commands__
@@ -194,7 +195,7 @@ TOTAL                     65      1    98%
   - echo 'export SPARK_HOME=/home/devuser/ES/spark/latest' >> ~/.bashrc
   - echo 'export PATH=$SPARK_HOME/bin:$PATH' >> ~/.bashrc
   - source ~/.bashrc
-  - spark-shell
+  - `spark-shell` or `pyspark`
 ```bash
 WARNING: Using incubator modules: jdk.incubator.vector
 Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
@@ -217,7 +218,11 @@ Spark context Web UI available at http://localhost:4040
 Spark context available as 'sc' (master = local[*], app id = local-1761338204619).
 Spark session available as 'spark'.
 
-scala>
+>>> myRange = spark.range(1000).toDF("number")
+>>> divisBy2 = myRange.where("number % 2 = 0")
+>>> divisBy2.count()
+500
+scala> exit()
 ```
   
 
