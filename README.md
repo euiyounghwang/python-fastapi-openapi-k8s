@@ -188,8 +188,38 @@ TOTAL                     65      1    98%
   - tar -xvf ./spark-4.0.1-bin-hadoop3.tgz
   - pwd
   - /home/devuser/ES/spark
+  - ln -s ./spark-4.0.1-bin-hadoop3 latest
+  - export SPARK_HOME=/home/devuser/ES/spark/latest
+  - export PATH=$SPARK_HOME/bin:$PATH
+  - echo 'export SPARK_HOME=/home/devuser/ES/spark/latest' >> ~/.bashrc
+  - echo 'export PATH=$SPARK_HOME/bin:$PATH' >> ~/.bashrc
+  - source ~/.bashrc
+  - spark-shell
+```bash
+WARNING: Using incubator modules: jdk.incubator.vector
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+25/10/24 15:36:41 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /___/ .__/\_,_/_/ /_/\_\   version 4.0.1
+      /_/
 
+Using Scala version 2.13.16 (OpenJDK 64-Bit Server VM, Java 17.0.9)
+Type in expressions to have them evaluated.
+Type :help for more information.
+25/10/24 15:36:44 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Spark context Web UI available at http://localhost:4040
+Spark context available as 'sc' (master = local[*], app id = local-1761338204619).
+Spark session available as 'spark'.
 
+scala>
+```
+  
 
 ### Kubernetes
 - Kubernetes is an open-source container orchestration system that automates the deployment, scaling, and management of containerized applications. It works by providing an API to manage clusters of virtual machines, scheduling containers, and automatically handling tasks like service discovery, load balancing, and self-healing to ensure applications remain available. 
