@@ -175,6 +175,26 @@ TOTAL                     65      1    98%
  *  Terminal will be reused by tasks, press any key to close it. 
 ```
 
+### Spark Cluster
+- An Apache Spark cluster is a distributed computing system designed for processing large datasets in parallel. It consists of a master node and multiple worker nodes. 
+    - Master Nodes: This node hosts the driver program, which is responsible for coordinating and managing the execution of Spark applications. It tracks the status of worker nodes and allocates tasks to them.
+    - Worker Nodes: These nodes, also known as data nodes, are responsible for storing data and executing the actual data processing tasks. They run Spark executor processes that perform computations on data partitions assigned by the master
+- Download : https://spark.apache.org/downloads.html
+- SSH into Local VM_#1, #2
+### Commands to create Spark Cluster
+- __Installation Commands__
+  - lsb_release -a
+  - wget https://dlcdn.apache.org/spark/spark-4.0.1/spark-4.0.1-bin-hadoop3.tgz
+  - tar -xvf ./spark-4.0.1-bin-hadoop3.tgz
+  - pwd
+  - /home/devuser/ES/spark
+
+
 
 ### Kubernetes
 - Kubernetes is an open-source container orchestration system that automates the deployment, scaling, and management of containerized applications. It works by providing an API to manage clusters of virtual machines, scheduling containers, and automatically handling tasks like service discovery, load balancing, and self-healing to ensure applications remain available. 
+### Commands to create K8s Cluster
+- __Installation Commands__
+  - lsb_release -a
+  - pwd
+  - /home/devuser/ES/k8s
