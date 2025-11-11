@@ -186,7 +186,7 @@ TOTAL                     65      1    98%
     - source venv/bin/activate
     - pip3 install pyspark==3.5.2
     - pyspark
-    - spark-submi --master "local[2]" ~/ES/spark/utils/hello-spark.py
+    - spark-submit --master "local[2]" ~/ES/spark/utils/hello-spark.py
 
 - SSH into Local VM_#1, #2
 ### Commands to create Spark Cluster
