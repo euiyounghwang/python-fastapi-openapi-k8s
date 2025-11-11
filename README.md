@@ -93,7 +93,7 @@ sudo service k8s_es_api status/stop/start
 ### Service
 - Run this command `./start-start.sh` or `python -m uvicorn main:app --reload --host=0.0.0.0 --port=8888 --workers 4`
 - Run Dockerfile: `CMD ["gunicorn", "-w", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8888", "-t", "30", "--pythonpath", "/app/FN-Basic-Services", "main:app"]`
-- Service : http://localhost:8888/docs
+- Service : http://VM_Node_#1:8888/docs
 
 
 
@@ -180,51 +180,108 @@ TOTAL                     65      1    98%
     - Master Nodes: This node hosts the driver program, which is responsible for coordinating and managing the execution of Spark applications. It tracks the status of worker nodes and allocates tasks to them.
     - Worker Nodes: These nodes, also known as data nodes, are responsible for storing data and executing the actual data processing tasks. They run Spark executor processes that perform computations on data partitions assigned by the master
 - Download : https://spark.apache.org/downloads.html
-- Spark Run Mode : Cluster, Client, Local Mode
+- Spark Run Mode : Cluster, Standalone(Sparck cluster with Master/Worker nodes in local env - `spark-submit with master address`, `start-master.sh`, `start-worker.sh <master_url>`), Local Mode(without cluster), Reference (https://wooono.tistory.com/140)
+  - Spark Local Mode (https://bluehorn07.github.io/2024/08/18/run-spark-on-local-1/): 
+    - python3 -m venv venv
+    - source venv/bin/activate
+    - pip3 install pyspark==3.5.2
+    - pyspark
+    - spark-submi --master "local[2]" ~/ES/spark/utils/hello-spark.py
+
 - SSH into Local VM_#1, #2
 ### Commands to create Spark Cluster
 - __Installation Commands__
   - lsb_release -a
+  - sudo apt update
+  - sudo apt install openjdk-17-jdk -y
   - wget https://dlcdn.apache.org/spark/spark-4.0.1/spark-4.0.1-bin-hadoop3.tgz
   - tar -xvf ./spark-4.0.1-bin-hadoop3.tgz
   - pwd
   - /home/devuser/ES/spark
   - ln -s ./spark-4.0.1-bin-hadoop3 latest
+  - sudo dpkg --configure -a
+  - sudo apt install python3.9
   - export SPARK_HOME=/home/devuser/ES/spark/latest
+  - export PYSPARK_PYTHON=/usr/bin/python3.9
   - export PATH=$SPARK_HOME/bin:$PATH
   - echo 'export SPARK_HOME=/home/devuser/ES/spark/latest' >> ~/.bashrc
   - echo 'export PATH=$SPARK_HOME/bin:$PATH' >> ~/.bashrc
+  - echo 'export PATH=$PYSPARK_PYTHON:$PATH' >> ~/.bashrc
   - source ~/.bashrc
   - `spark-shell` or `pyspark`
-```bash
-WARNING: Using incubator modules: jdk.incubator.vector
-Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
-25/10/24 15:36:41 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
-Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
-Setting default log level to "WARN".
-To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
-Welcome to
-      ____              __
-     / __/__  ___ _____/ /__
-    _\ \/ _ \/ _ `/ __/  '_/
-   /___/ .__/\_,_/_/ /_/\_\   version 4.0.1
-      /_/
+  ```bash
+  WARNING: Using incubator modules: jdk.incubator.vector
+  Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+  25/10/24 15:36:41 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+  Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+  Setting default log level to "WARN".
+  To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+  Welcome to
+        ____              __
+      / __/__  ___ _____/ /__
+      _\ \/ _ \/ _ `/ __/  '_/
+    /___/ .__/\_,_/_/ /_/\_\   version 4.0.1
+        /_/
 
-Using Scala version 2.13.16 (OpenJDK 64-Bit Server VM, Java 17.0.9)
-Type in expressions to have them evaluated.
-Type :help for more information.
-25/10/24 15:36:44 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-Spark context Web UI available at http://localhost:4040
-Spark context available as 'sc' (master = local[*], app id = local-1761338204619).
-Spark session available as 'spark'.
+  Using Scala version 2.13.16 (OpenJDK 64-Bit Server VM, Java 17.0.9)
+  Type in expressions to have them evaluated.
+  Type :help for more information.
+  25/10/24 15:36:44 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+  Spark context Web UI available at http://VM_Node_#1:4040
+  Spark context available as 'sc' (master = local[*], app id = local-1761338204619).
+  Spark session available as 'spark'.
 
->>> myRange = spark.range(1000).toDF("number")
->>> divisBy2 = myRange.where("number % 2 = 0")
->>> divisBy2.count()
-500
-scala> exit()
-```
-  
+  >>> myRange = spark.range(1000).toDF("number")
+  >>> divisBy2 = myRange.where("number % 2 = 0")
+  >>> divisBy2.count()
+  500
+  scala> exit()
+  ```
+  - Setup Spark Cluster: Run the Master Node `spark-class org.apache.spark.deploy.master.Master -h VM_Node_#1` on VM_Node_#1, http://VM_Node_#1:8080, Reference (https://bluehorn07.github.io/topic/development#apache-spark)
+    - If there is no JAVA_HOME Path: Modify `spark-env.sh`
+    - cp conf/spark-env.sh.template conf/spark-env.sh
+    ```bash
+    #!/usr/bin/env bash
+
+    export JAVA_HOME=/apps/monitoring_script/spark/java/latest
+    spark-class org.apache.spark.deploy.master.Master -h localhost
+
+    ```
+
+    - `./spark-env.sh`
+  ```bash
+  WARNING: Using incubator modules: jdk.incubator.vector
+  Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+  25/10/27 15:31:43 WARN Utils: Your hostname, ubuntu-node-1, resolves to a loopback address: 127.0.1.1; using VM_Node_#1 instead (on interface enp0s1)
+  25/10/27 15:31:43 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+  25/10/27 15:31:44 INFO Master: Started daemon with process name: 2849@ubuntu-node-1
+  25/10/27 15:31:44 INFO SignalUtils: Registering signal handler for TERM
+  25/10/27 15:31:44 INFO SignalUtils: Registering signal handler for HUP
+  25/10/27 15:31:44 INFO SignalUtils: Registering signal handler for INT
+  25/10/27 15:31:44 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+  Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+  25/10/27 15:31:44 INFO SecurityManager: Changing view acls to: devuser
+  25/10/27 15:31:44 INFO SecurityManager: Changing modify acls to: devuser
+  25/10/27 15:31:44 INFO SecurityManager: Changing view acls groups to: devuser
+  25/10/27 15:31:44 INFO SecurityManager: Changing modify acls groups to: devuser
+  25/10/27 15:31:44 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: devuser groups with view permissions: EMPTY; users with modify permissions: devuser; groups with modify permissions: EMPTY; RPC SSL disabled
+  25/10/27 15:31:44 INFO Utils: Successfully started service 'sparkMaster' on port 7077.
+  25/10/27 15:31:44 INFO Master: Starting Spark master at spark://VM_Node_#1:7077
+  25/10/27 15:31:44 INFO Master: Running Spark version 4.0.1
+  25/10/27 15:31:44 INFO JettyUtils: Start Jetty 0.0.0.0:8080 for MasterUI
+  25/10/27 15:31:44 INFO Utils: Successfully started service 'MasterUI' on port 8080.
+  25/10/27 15:31:44 INFO MasterWebUI: Bound MasterWebUI to 0.0.0.0, and started at http://VM_Node_#1:8080
+  25/10/27 15:31:44 INFO Master: I have been elected leader! New state: ALIVE
+  ```
+  - Run spark application on Master node : `spark-submit --master spark://VM_Node_#1:7077 ~/ES/spark/utils/hello-spark.py` (Need to join the Worker node into Spark Cluster), `WARN TaskSchedulerImpl: Initial job has not accepted any resources; check your cluster UI to ensure that workers are registered and have sufficient resources`
+  ```bash
+  25/10/27 15:45:23 INFO DAGScheduler: Submitting 2 missing tasks from ResultStage 0 (PythonRDD[1] at count at /home/devuser/ES/spark/utils/hello-spark.py:10) (first 15 tasks are for partitions Vector(0, 1))
+  25/10/27 15:45:23 INFO TaskSchedulerImpl: Adding task set 0.0 with 2 tasks resource profile 0
+  25/10/27 15:45:38 WARN TaskSchedulerImpl: Initial job has not accepted any resources; check your cluster UI to ensure that workers are registered and have sufficient resources
+  ```
+  - Setup Spark Cluster: Run the Worker Node `spark-class org.apache.spark.deploy.worker.Worker spark://VM_Node_#1:7077` on VM_Node_#2
+  - Run the spark application on Master node (VM_Node_#1): `spark-submit --master spark://VM_Node_#1:7077 --total-executor-cores 1 --executor-memory 512m ~/ES/spark/utils/hello-spark.py`
+
 
 ### Kubernetes
 - Kubernetes is an open-source container orchestration system that automates the deployment, scaling, and management of containerized applications. It works by providing an API to manage clusters of virtual machines, scheduling containers, and automatically handling tasks like service discovery, load balancing, and self-healing to ensure applications remain available. 
