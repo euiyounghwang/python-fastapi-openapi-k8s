@@ -5,11 +5,22 @@ from starlette.middleware.cors import CORSMiddleware
 # from config.log_config import create_log
 import yaml
 from injector import logger
-
+from job.job import create_job
+import asyncio
+from contextlib import asynccontextmanager
 
 # logger = create_log()
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info(f'@@ Starting Application...@@')
+    yield  # 애플리케이션 시작 및 요청 처리
+    logger.info(f'@@ Stopping Application...@@')
+
+
 app = FastAPI(
+    lifespan=lifespan,
     title="FastAPI Basic Docker with k8s Service",
     description="FastAPI Basic Docker with k8s Service",
     version="0.0.1",
@@ -24,6 +35,24 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# --
+# Create task as background
+create_job()
+# --
+
+
+"""
+loop = asyncio.get_event_loop()
+
+if loop.is_running():
+    # Multiple topics from config.yml or docker arguments
+    # for topic in global_settings.get_Kafka_topic():
+    #     asyncio.create_task(kafka_event(topic))
+    print('Tasks..')
+    asyncio.create_task(event_register())
+
+"""
 
 """
 # Load an external OpenAPI YAML file
