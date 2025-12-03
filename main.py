@@ -11,12 +11,46 @@ from contextlib import asynccontextmanager
 
 # logger = create_log()
 
+# DB 연결 객체와 세션 관리 변수
+database_engine = None
+db_session = None
+
+async def initialize_database():
+    global database_engine, db_session
+
+    print("Database initialized.")
+    # database_url = "sqlite:///./database.db" # SQLite 예시
+    # database_engine = create_engine(database_url)
+    # SQLModel.metadata.create_all(database_engine) # 테이블 생성 (필요시)
+
+    # DB 세션 생성 (예시)
+    # db_session = Session(database_engine)
+
+async def initialize_scheduler():
+    print("Scheduler initialized.")
+    # --
+    # Create task as background
+    create_job()
+    # --
+
+async def clean_up_database():
+    print("Database connection closed.")
+
+async def clean_up_scheduler():
+    print("Scheduler stopped.")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info(f'@@ Starting Application...@@')
-    yield  # 애플리케이션 시작 및 요청 처리
-    logger.info(f'@@ Stopping Application...@@')
+    # Startup tasks
+    await initialize_database()
+    await initialize_scheduler()
+    print("All startup tasks completed.")
+    yield
+    # Shutdown tasks
+    await clean_up_database()
+    await clean_up_scheduler()
+    print("All shutdown tasks completed.")
 
 
 app = FastAPI(
@@ -36,10 +70,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --
-# Create task as background
-create_job()
-# --
 
 
 """
