@@ -19,5 +19,6 @@ fi
 
 
 # py.test -v tests
+pytest -v tests
 # py.test -v ./tests --cov-report term-missing --cov
-poetry run py.test -sv ./tests --disable-warnings --cov-report term-missing --cov
+# poetry run py.test -sv ./tests --disable-warnings --cov-report term-missing --cov

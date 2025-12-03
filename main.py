@@ -15,6 +15,11 @@ from contextlib import asynccontextmanager
 database_engine = None
 db_session = None
 
+
+async def create_task():
+    logger.info("-- create_task.. --")
+
+
 async def initialize_database():
     global database_engine, db_session
 
@@ -28,6 +33,11 @@ async def initialize_database():
 
 async def initialize_scheduler():
     print("Scheduler initialized.")
+    
+    # 이하 어플리케이션 시작 시 처리할 로직
+    task0 = asyncio.create_task(create_task())
+    await task0
+
     # --
     # Create task as background
     create_job()
@@ -117,8 +127,12 @@ app.openapi = custom_openapi
 
 @app.get("/", tags=['API'],  
          status_code=200,
+         responses={
+            200: {"description" : "OK"},
+            500 :{"description" : "Unexpected error"}
+         },
          description="Default GET API", 
-         summary="Return Json")
+         summary="Return Default Json")
 async def root():
     logger.info("/hello")
     return {"message": "python-fastapi-openapi.yml k8s"}
@@ -131,16 +145,20 @@ async def root():
 async def root_with_arg(id):
     logger.info('root_with_arg - {}'.format(id))
     return {"message": "Hello World [{}]".format(id)}
-
+'''
 
 @app.get("/test/{id}", tags=['API'],  
          status_code=200,
+         responses={
+            200: {"description" : "OK"},
+            500 :{"description" : "Unexpected error"}
+         },
          description="Default GET with Body API", 
          summary="Return GET with Body Json")
-async def root_with_param(id):
-    logger.info('root_with_arg - {}'.format(id))
+async def test_api(id: int):
+    logger.info('test_api - {}'.format(id))
     return {"message": "Hello World [{}]".format(id)}
-'''
+
 
 # router
 # app.include_router(db_controller.app, tags=["DB API"], )
