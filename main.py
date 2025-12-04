@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.openapi.utils import get_openapi
+from fastapi.security.api_key import APIKeyHeader
 from starlette.middleware.cors import CORSMiddleware
 # from controller import db_controller
 # from config.log_config import create_log
@@ -15,6 +16,8 @@ from contextlib import asynccontextmanager
 database_engine = None
 db_session = None
 
+API_TOKEN = "1234"
+auth_header = APIKeyHeader(name="Authorization", auto_error=False)
 
 async def create_task():
     logger.info("-- create_task.. --")
@@ -69,6 +72,7 @@ app = FastAPI(
     description="FastAPI Basic Docker with k8s Service",
     version="0.0.1",
     # terms_of_service="http://example.com/terms/",
+     dependencies=[Depends(auth_header)],
 )
 
 
@@ -133,7 +137,10 @@ app.openapi = custom_openapi
          },
          description="Default GET API", 
          summary="Return Default Json")
+# async def root(token: str = Depends(auth_header)):
 async def root():
+    # if token != API_TOKEN:
+    #     raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
     logger.info("/hello")
     return {"message": "python-fastapi-openapi.yml k8s"}
 

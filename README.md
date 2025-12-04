@@ -301,3 +301,24 @@ curl \
   -H 'Authorization: Bearer CMJuRd2KKqt1UmxntJZCelvlDuxrbiUzzQ9AW9B7lnQ' \
   --data-binary @movies.json
 ```
+- Zincsearch (https://github.com/zincsearch/zincsearch): ZincSearch is a search engine that does full text indexing. It is a lightweight alternative to Elasticsearch and runs using a fraction of the resources. 
+- Docs : https://zincsearch-docs.zinc.dev/quickstart/, Swagger : http://localhost:4080/swagger/
+- Run : `./zincsearch ZINC_PROMETHEUS_ENABLE=true`
+- Bulk Sample : $ curl http://localhost:4080/api/_bulk -i -u test:test --data-binary "@./Search_Engine/olympics.json"
+```bash
+ZINC_FIRST_ADMIN_USER=test
+ZINC_FIRST_ADMIN_PASSWORD=test
+```
+- Search
+```bash
+curl \
+  -X POST 'http://localhost:4080/api/olympics/_search' \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Basic test:test' \
+  -d'
+     {
+       "query": {
+         "match_all": {}
+       }
+  }'
+```
