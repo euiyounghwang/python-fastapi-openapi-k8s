@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "title": "The Dark Knight",
+    "genres": ["Action", "Crime", "Drama"],
+    "release_date": 1216339200
+  },
+  {
+    "id": 2,
+    "title": "Inception",
+    "genres": ["Action", "Adventure", "Sci-Fi"],
+    "release_date": 1279267200
+  }
+]

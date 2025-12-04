@@ -290,3 +290,14 @@ TOTAL                     65      1    98%
   - lsb_release -a
   - pwd
   - /home/devuser/ES/k8s
+
+
+### Search Engine
+- Meilisearch(https://github.com/meilisearch/meilisearch) : Meilisearch is an open-source, lightning-fast search engine designed to provide a highly relevant and intuitive search experience for applications and websites
+```bash
+curl \
+  -X POST 'http://localhost:7700/indexes/movies/documents' \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer CMJuRd2KKqt1UmxntJZCelvlDuxrbiUzzQ9AW9B7lnQ' \
+  --data-binary @movies.json
+```

@@ -1,2 +1,4 @@
 .venv/
 logs/
+data.ms/
+.env
