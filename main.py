@@ -1,16 +1,16 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Security
 from fastapi.openapi.utils import get_openapi
 from fastapi.security.api_key import APIKeyHeader
 from starlette.middleware.cors import CORSMiddleware
 # from controller import db_controller
-# from config.log_config import create_log
+from config.log_config import create_log
 import yaml
 from injector import logger
 from job.job import create_job
 import asyncio
 from contextlib import asynccontextmanager
 
-# logger = create_log()
+logger = create_log()
 
 # DB 연결 객체와 세션 관리 변수
 database_engine = None
@@ -38,12 +38,12 @@ async def initialize_scheduler():
     print("Scheduler initialized.")
     
     # 이하 어플리케이션 시작 시 처리할 로직
-    task0 = asyncio.create_task(create_task())
-    await task0
+    # task0 = asyncio.create_task(create_task())
+    # await task0
 
     # --
     # Create task as background
-    create_job()
+    # create_job()
     # --
 
 async def clean_up_database():
@@ -129,6 +129,14 @@ def custom_openapi():
 app.openapi = custom_openapi
 """
 
+def get_api_key(api_key_header: str = Security(auth_header)):
+    if api_key_header == API_TOKEN:
+        return api_key_header
+    else:
+        raise HTTPException(
+            status_code=403, detail="Could not validate credentials"
+        )
+
 @app.get("/", tags=['API'],  
          status_code=200,
          responses={
@@ -137,11 +145,9 @@ app.openapi = custom_openapi
          },
          description="Default GET API", 
          summary="Return Default Json")
-# async def root(token: str = Depends(auth_header)):
-async def root():
-    # if token != API_TOKEN:
-    #     raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
-    logger.info("/hello")
+async def root(api_key: str = Depends(get_api_key)):
+# async def root():
+    logger.info("logger..")
     return {"message": "python-fastapi-openapi.yml k8s"}
 
 '''
