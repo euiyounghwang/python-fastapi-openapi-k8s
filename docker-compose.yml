@@ -32,6 +32,19 @@ services:
     volumes:
       - ./data.ms:/data.ms
     restart: unless-stopped    
+
+  # After the containers are up, ZincSearch can be accessed in a web browser at http://localhost:4080
+  zincsearch:
+    image: public.ecr.aws/zincsearch/zincsearch:latest
+    container_name: zincsearch
+    ports:
+      - "4080:4080" # UI and API access
+    environment:
+      ZINC_FIRST_ADMIN_USER: admin
+      ZINC_FIRST_ADMIN_PASSWORD: 1234qwer
+      ZINC_DATA_PATH: /app/data
+    volumes:
+      - ./:/app/data # Persistent storage for ZincSearch data
   
   fn-es8:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
