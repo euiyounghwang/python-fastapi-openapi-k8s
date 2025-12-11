@@ -242,10 +242,35 @@ TOTAL                     65      1    98%
     - cp conf/spark-env.sh.template conf/spark-env.sh
     ```bash
     #!/usr/bin/env bash
+ 
+    export SPARK_HOME=/apps/monitoring_script/spark/latest
+    export PYSPARK_PYTHON=/usr/local/bin/python3.9
+    export PATH=$SPARK_HOME/bin:$PATH
+
+    export MASTER_PORT=7077
 
     export JAVA_HOME=/apps/monitoring_script/spark/java/latest
-    spark-class org.apache.spark.deploy.master.Master -h localhost
 
+    # Options for beeline
+    # - SPARK_BEELINE_OPTS, to set config properties only for the beeline cli (e.g. "-Dx=y")
+    # - SPARK_BEELINE_MEMORY, Memory for beeline (e.g. 1000M, 2G) (Default: 1G)
+    export JAVA_HOME=/apps/java/latest
+    export SPARK_WORKER_CORES=1
+    export SPARK_WORKER_MEMORY="1g"
+    export SPARK_WORKER_PORT=5000
+    #export SPARK_EXECUTOR_INSTANCES=5
+    export SPARK_WORKER_INSTANCES=4
+    export SPARK_CONF_DIR="/apps/spark/latest/conf"
+    export SPARK_TMP_DIR="/apps/var/spark/tmp"
+    export SPARK_PID_DIR="/apps/var/spark/pids"
+    export SPARK_LOG_DIR="/apps/var/spark/logs"
+    export SPARK_WORKER_DIR="/apps/var/spark/work"
+    export SPARK_MASTER_HOST="localhost"
+    #export SPARK_MASTER_IP="localhost" #master node's IP address here.
+    export SPARK_MASTER_PORT=7077
+    export SPARK_LOCAL_IP="localhost"  # local node IP
+    export SPARK_WORKER_OPTS="-Dspark.worker.cleanup.enabled=true -Dspark.worker.cleanup.interval=10 -Dspark.worker.cleanup.appDataTtl=604800"
+    export SPARK_WORKER_WEBUI_PORT="8085"
     ```
 
     - `./spark-env.sh`
@@ -281,6 +306,98 @@ TOTAL                     65      1    98%
   ```
   - Setup Spark Cluster: Run the Worker Node `spark-class org.apache.spark.deploy.worker.Worker spark://VM_Node_#1:7077` on VM_Node_#2
   - Run the spark application on Master node (VM_Node_#1): `spark-submit --master spark://VM_Node_#1:7077 --total-executor-cores 1 --executor-memory 512m ~/ES/spark/utils/hello-spark.py`
+
+- __Server_Practice Commands__
+  - Spark Master, Spark Worker
+  ```bash
+  [spark@localhost spark]$ ./spark-master.sh start
+  🦄 Starting es-spark-cluster-service
+  starting org.apache.spark.deploy.master.Master, logging to /apps/monitoring_script/spark/latest/logs/spark-spark-org.apache.spark.deploy.master.Master-1-localhost.out
+  [spark@localhost spark]$ ./spark-master.sh status
+  🦄 es-spark-cluster-service is Running as PID: 10574
+
+  [spark@localhost spark]$ ./spark-worker.sh start
+  🦄 Starting es-spark-workers-service
+    starting org.apache.spark.deploy.worker.Worker, logging to /apps/monitoring_script/spark/latest/logs/spark-spark-org.apache.spark.deploy.worker.Worker-1-localhost.out
+  [spark@localhost spark]$ ./spark-worker.sh status
+  🦄 es-spark-workers-service is Running as PID: 11019
+  ```
+  - Spark Submit Job (API for the spark custom job: http://localhost:8080/json/)
+  ```bash
+  [spark@localhost spark]$ /apps/monitoring_script/spark/latest/bin/spark-submit --master spark://localhost:7077 /apps/monitoring_script/spark/utils/hello-spark.py
+  [spark@localhost spark]$ ls
+  java  latest  spark-4.0.1-bin-hadoop3  spark-4.0.1-bin-hadoop3.tgz  spark-master.sh  sparkSubmit.sh  spark-worker.sh  utils
+  [spark@localhost spark]$
+
+  [spark@localhost spark]$ ./sparkSubmit.sh start
+  ...
+  25/12/11 14:59:05 INFO DAGScheduler: Job 0 finished: count at /apps/monitoring_script/spark/utils/hello-spark.py:10, took 2867.462486 ms
+  10000
+  25/12/11 14:59:06 INFO SparkContext: Invoking stop() from shutdown hook
+  ...
+  ```
+  - API JSON Result (http://localhost:8080/json/)
+  ```bash
+  {
+    "url" : "spark://localhost:7077",
+    "workers" : [ {
+      "id" : "worker-20251211110141-127.0.0.1-14946",
+      "host" : "127.0.0.1",
+      "port" : 14946,
+      "webuiaddress" : "http://127.0.0.1:8081",
+      "cores" : 1,
+      "coresused" : 0,
+      "coresfree" : 1,
+      "memory" : 1024,
+      "memoryused" : 0,
+      "memoryfree" : 1024,
+      "resources" : { },
+      "resourcesused" : { },
+      "resourcesfree" : { },
+      "state" : "ALIVE",
+      "lastheartbeat" : 1765483182554
+    } ],
+    "aliveworkers" : 1,
+    "cores" : 1,
+    "coresused" : 0,
+    "memory" : 1024,
+    "memoryused" : 0,
+    "resources" : [ { } ],
+    "resourcesused" : [ { } ],
+    "activeapps" : [ ],
+    "completedapps" : [ {
+      "id" : "app-20251211145804-0000",
+      "starttime" : 1765483084690,
+      "name" : "hello-spark.py",
+      "cores" : 1,
+      "user" : "spark",
+      "memoryperexecutor" : 1024,
+      "memoryperslave" : 1024,
+      "resourcesperexecutor" : [ ],
+      "resourcesperslave" : [ ],
+      "submitdate" : "Thu Dec 11 14:58:04 EST 2025",
+      "state" : "FINISHED",
+      "duration" : 9093
+    }, {
+      "id" : "app-20251211145856-0001",
+      "starttime" : 1765483136792,
+      "name" : "hello-spark.py",
+      "cores" : 1,
+      "user" : "spark",
+      "memoryperexecutor" : 1024,
+      "memoryperslave" : 1024,
+      "resourcesperexecutor" : [ ],
+      "resourcesperslave" : [ ],
+      "submitdate" : "Thu Dec 11 14:58:56 EST 2025",
+      "state" : "FINISHED",
+      "duration" : 9393
+    } ],
+    "activedrivers" : [ ],
+    "completeddrivers" : [ ],
+    "status" : "ALIVE"
+  }
+  ```
+  
 
 
 ### Kubernetes

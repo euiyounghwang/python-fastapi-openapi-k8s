@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
 
-spark = SparkSession.builder.getOrCreate()
+spark = SparkSession.builder.appName("PysparkCount").getOrCreate()
 print(spark)
 
 sc = spark.sparkContext
