@@ -180,6 +180,7 @@ TOTAL                     65      1    98%
     - Master Nodes: This node hosts the driver program, which is responsible for coordinating and managing the execution of Spark applications. It tracks the status of worker nodes and allocates tasks to them.
     - Worker Nodes: These nodes, also known as data nodes, are responsible for storing data and executing the actual data processing tasks. They run Spark executor processes that perform computations on data partitions assigned by the master
 - Download : https://spark.apache.org/downloads.html
+- Reference : https://velog.io/@jskim/Spark-%EB%B0%B0%ED%8F%AC-%EB%B0%8F-%EC%8B%A4%ED%96%89-%EB%B0%A9%EB%B2%95%EC%97%90-%EB%8C%80%ED%95%9C-%EC%9D%B4%ED%95%B4
 - Spark Run Mode : Cluster, Standalone(Sparck cluster with Master/Worker nodes in local env - `spark-submit with master address`, `start-master.sh`, `start-worker.sh <master_url>`), Local Mode(without cluster), Reference (https://wooono.tistory.com/140)
   - Spark Local Mode (https://bluehorn07.github.io/2024/08/18/run-spark-on-local-1/): 
     - python3 -m venv venv
@@ -322,7 +323,7 @@ TOTAL                     65      1    98%
   [spark@localhost spark]$ ./spark-worker.sh status
   🦄 es-spark-workers-service is Running as PID: 11019
   ```
-  - Spark Submit Job (API for the spark custom job: http://localhost:8080/json/)
+  - Spark Submit Job (API for the spark custom job: http://localhost:8080/json/) : Args -> --deploy-mode client : Cluster 내부의 Node에서 Driver 실행, Cluster: Spark Application을 실행하는 Node에서 Driver 실행
   ```bash
   [spark@localhost spark]$ /apps/monitoring_script/spark/latest/bin/spark-submit --master spark://localhost:7077 /apps/monitoring_script/spark/utils/hello-spark.py
   [spark@localhost spark]$ ls
