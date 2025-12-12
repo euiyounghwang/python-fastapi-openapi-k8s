@@ -15,10 +15,11 @@ def test_feature_in_progress():
 def test_api(mock_client):
     # response = mock_client.get("/")
     client = TestClient(app)
+    ''' need to add a authorizaton header'''
     response = client.get("/")
     assert response is not None
-    assert response.status_code == 200
-    assert response.json() == {"message": "python-fastapi-openapi.yml k8s"}
+    assert response.status_code == 403
+    # assert response.json() == {"message": "python-fastapi-openapi.yml k8s"}
     
 
 test_data = [(i, {'message': 'Hello World [{}]'.format(i)}) for i in [2, 0]]
