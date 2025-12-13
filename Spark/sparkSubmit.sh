@@ -21,7 +21,9 @@ case "$1" in
         # $SPARK_PATH/bin/spark-submit  --driver-java-options "-Dlog4j.configuration=file:$SPARK_PATH/conf/StreamProcessLogDriverWMx.properties" --conf "spark.executor.extraJavaOptions=-XX:+UseG1GC -Dlog4j.configuration=file:$SPARK_PATH/conf/StreamProcessLogExecutorWMx.properties -Dspark.authenticate=true -Dspark.authenticate.secret=file:$secret_file" --executor-memory 1g   --driver-memory 1g --total-executor-cores 6   --deploy-mode client --supervise  --master $MASTER_URL  --jars $JAR_LOC  --class com.xpo.bi.StreamProcess /apps/spark/custom/test.jar &
         # /apps/monitoring_script/spark/latest/bin/spark-submit --master spark://localhost:7077 /apps/monitoring_script/spark/utils/hello-spark.py
         $SPARK_PATH/latest/bin/spark-submit --master spark://$MASTER_HOST:7077 $SPARK_PATH/utils/hello-spark.py --deploy-mode client --name PysparkCount
+        # $SPARK_PATH/latest/bin/spark-submit --master spark://$MASTER_HOST:7077 --deploy-mode client --name my_spark_job_args_test $SPARK_PATH/utils/spark-args-test.py --input_path input_path_str --output_path output_path_str
         # $SPARK_PATH/latest/bin/spark-submit --master spark://<master-host>:7077 --class com.example.MySparkApp my-app.jar. 
+        # $SPARK_PATH/latest/bin/spark-submit --master spark://$MASTER_HOST:7077 --deploy-mode client --name StreamProcess_ES_Search --jars $SPARK_PATH/jars/elasticsearch-spark-30_2.12-8.7.0.jar $SPARK_PATH/utils/spark-es-read.py
         ;;
   stop)
         # Stop daemons.
